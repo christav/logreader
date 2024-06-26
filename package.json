@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "clean": "rimraf build",
     "start": "npm run build && node build/src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,6 +16,7 @@
     "chai": "^5.1.1",
     "fastify": "^4.28.0",
     "mocha": "^10.5.2",
+    "rimraf": "^5.0.7",
     "typescript": "^5.5.2"
   }
 }
