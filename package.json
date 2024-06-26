@@ -4,6 +4,8 @@
   "description": "REST endpoint to serve up log entries from log files",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
+    "start": "npm run build && node build/src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Chris Tavares <cct@tavaresstudios.com>",
