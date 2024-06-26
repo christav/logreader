@@ -1,6 +1,6 @@
 {
     "extension": ["ts"],
-    "spec": "test/**/*.ts",
+    "spec": "test/**/*-test.ts",
     "recursive": true,
     "import": [ "tsx" ]
 }
