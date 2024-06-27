@@ -4,6 +4,7 @@ import { sampleFilePath } from '../test-support';
 import { makeReverseBlockStream } from '../../src/lib/log-streams';
 
 import { finished } from 'stream/promises';
+import { Readable } from 'stream';
 
 describe('ReverseBlockStream', () => {
   it('should immediately exit without emitting if handed an empty file', async () => {
@@ -11,7 +12,11 @@ describe('ReverseBlockStream', () => {
     const revStream = makeReverseBlockStream(emptyFilePath);
 
     let numBlocks = 0;
-    revStream.on('readable', () => { ++numBlocks; });
+    revStream.on('readable', function (this: Readable) {
+      while(this.read() !== null) {
+        ++numBlocks;
+      }
+    });
     revStream.resume();
     await finished(revStream);
 
