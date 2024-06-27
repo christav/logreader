@@ -13,13 +13,8 @@
             ],
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
             "args": [
-                "--require",
-                "tsx",
-                "--timeout",
-                "999999",
-                "--colors",
-                "--recursive",
-                "test/**/*-test.ts"
+                "--config",
+                "${workspaceFolder}/.mocharc.json"
             ]
         }
     ]

@@ -2,5 +2,5 @@
     "extension": ["ts"],
     "spec": "test/**/*-test.ts",
     "recursive": true,
-    "import": [ "tsx" ]
+    "require": [ "tsx" ]
 }
