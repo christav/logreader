@@ -17,4 +17,10 @@ describe('ReverseBlockStream', () => {
 
     expect(numBlocks).to.eql(0);
   });
+
+  it('should return one block if file is one block long');
+  it('should return blocks in reverse order if there are multiple blocks in log');
+  it('should return partial first block last if log is not multiple of block size');
+  it('should not interfere with writing to file while open');
+  it('should skip new logs written while returning blocks');
 });
