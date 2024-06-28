@@ -1,9 +1,1 @@
-import { Readable } from "stream";
-
-export function makeReverseBlockStream(logfile: string): Readable {
-  return new Readable({
-    read (size) {
-      this.push(null);
-    }
-  });
-}
+export { DEFAULT_BLOCK_SIZE, makeReverseBlockStream } from './reverse-block-stream';
