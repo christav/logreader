@@ -3,22 +3,15 @@ import { sampleFilePath } from '../test-support';
 
 import { makeReverseBlockStream } from '../../src/lib/log-streams';
 
-import { finished } from 'stream/promises';
-import { Readable } from 'stream';
-
 describe('ReverseBlockStream', () => {
   it('should immediately exit without emitting if handed an empty file', async () => {
     const emptyFilePath = sampleFilePath('empty-log.log');
     const revStream = await makeReverseBlockStream(emptyFilePath);
 
     let numBlocks = 0;
-    revStream.on('readable', function (this: Readable) {
-      while(this.read() !== null) {
-        ++numBlocks;
-      }
-    });
-    revStream.resume();
-    await finished(revStream);
+    for await (let block of revStream) {
+      ++numBlocks;
+    }
 
     expect(numBlocks).to.eql(0);
   });
@@ -29,15 +22,11 @@ describe('ReverseBlockStream', () => {
 
     let numBlocks = 0;
     let blocks: Buffer[] = [];
-    revStream.on('readable', function(this: Readable) {
-      let block: Buffer | null;
-      while ((block = this.read()) !== null) {
-        blocks.push(block);
-        ++numBlocks;
-      }
-    });
-    revStream.resume();
-    await finished(revStream);
+
+    for await (let block of revStream) {
+      blocks.push(block);
+      ++numBlocks;
+    }
 
     expect(numBlocks).to.eql(1);
     const blockText = blocks[0].toString('utf8')
