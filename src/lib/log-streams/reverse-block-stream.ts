@@ -13,7 +13,20 @@ interface BlockIndex {
 // blocks in order.
 // Returns start index and number of bytes to read for this block.
 function * blockIndexes(fileLength: number, blockSize: number): Generator<BlockIndex> {
-  yield { start: 0, length: 16 };
+  const fullBlocks = Math.floor(fileLength / blockSize);
+  const leftOverBytes = fileLength % blockSize;
+
+  // Indexes for the full blocks
+  let start = fileLength;
+  for(let block = 0; block < fullBlocks; ++block) {
+    start -= blockSize;
+    yield { start, length: blockSize };
+  }
+
+  // And any remaining leftovers at the start of the file
+  if (leftOverBytes > 0) {
+    yield { start: 0, length: leftOverBytes };
+  }
 }
 
 async function *readBlocksGenerator(fh: FileHandle, fileLength: number, blockSize: number): AsyncGenerator<Buffer> {

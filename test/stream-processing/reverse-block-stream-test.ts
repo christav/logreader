@@ -33,7 +33,20 @@ describe('ReverseBlockStream', () => {
     expect(blockText).to.eql('0123456789abcdef');
   });
 
-  it('should return blocks in reverse order if there are multiple blocks in log');
+  it('should return blocks in reverse order if there are multiple blocks in log', async () => {
+    const testFilePath = sampleFilePath('one-line-20-bytes.log');
+    const revStream = await makeReverseBlockStream(testFilePath, 10);
+
+    let blocks: Buffer[] = [];
+    for await (let block of revStream) {
+      blocks.push(block);
+    }
+
+    expect(blocks).to.have.lengthOf(2);
+    expect(blocks[0].toString('utf8')).to.eql('abcdefghij');
+    expect(blocks[1].toString('utf8')).to.eql('0123456789');
+  });
+
   it('should return partial first block last if log is not multiple of block size');
   it('should not interfere with writing to file while open');
   it('should skip new logs written while returning blocks');
