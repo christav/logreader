@@ -47,7 +47,21 @@ describe('ReverseBlockStream', () => {
     expect(blocks[1].toString('utf8')).to.eql('0123456789');
   });
 
-  it('should return partial first block last if log is not multiple of block size');
+  it('should return partial first block last if log is not multiple of block size', async () => {
+    const testFilePath = sampleFilePath('one-line-20-bytes.log');
+    const revStream = await makeReverseBlockStream(testFilePath, 7);
+
+    let blocks: Buffer[] = [];
+    for await (let block of revStream) {
+      blocks.push(block);
+    }
+
+    expect(blocks).to.have.lengthOf(3);
+    expect(blocks[0].toString('utf8')).to.eql('defghij');
+    expect(blocks[1].toString('utf8')).to.eql('6789abc');
+    expect(blocks[2].toString('utf8')).to.eql('012345');
+  });
+
   it('should not interfere with writing to file while open');
   it('should skip new logs written while returning blocks');
 });
