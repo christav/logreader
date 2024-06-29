@@ -7,7 +7,7 @@ describe('line transform transform', () => {
   it('should return one line from one line stream', async () => {
     const chunks = [Buffer.from('this is a line\n', 'utf8')];
     const lines: string[] = [];
-    
+
     await pipeline(
       chunks,
       makeToLinesTransform(),
@@ -50,6 +50,6 @@ describe('line transform transform', () => {
   it('should delimit lines by crlf');
   it('should not output oldest line in chunk if invalid utf8');
   it('should not output first line in chunk until next chunk comes in');
-  it('should output first l9ine in chunk when stream is closing');
-  
+  it('should output first line in chunk when stream is closing');
+
 });

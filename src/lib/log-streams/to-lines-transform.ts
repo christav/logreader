@@ -13,7 +13,16 @@ class ToLinesTransform extends Transform {
 
   _transform(chunk: any, encoding: BufferEncoding, callback: TransformCallback): void {
     // Prepend this chunk to pending chunk
-    // Isolate out first line from chunk
+    // Since this chunk is "older" since we're getting them backwards from the source
+    const fullChunk = Buffer.concat([chunk as Buffer, this.pendingChunk]);
+
+    // Isolate out first line from chunk - could be incomplete, so we save
+    // the first line until we get the next chunk or the stream ends
+    // 0x0a is the code for lf, which is always at the end even if using windows
+    // crlf separators.
+    const firstLineEndIndex = fullChunk.indexOf(0x0a);
+
+
     // Store first line as new pending chunk
 
     // Convert rest of chunk of text
