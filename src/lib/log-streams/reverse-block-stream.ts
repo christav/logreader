@@ -32,7 +32,7 @@ function * blockIndexes(fileLength: number, blockSize: number): Generator<BlockI
 async function *readBlocksGenerator(fh: FileHandle, fileLength: number, blockSize: number): AsyncGenerator<Buffer> {
   try {
     for (let {start, length} of blockIndexes(fileLength, blockSize)) {
-      const buf = Buffer.alloc(length);
+      const buf = Buffer.allocUnsafe(length);
       const readResult = await fh.read({ buffer: buf, position: start, length });
       if (readResult.bytesRead === 0) {
         // TODO: error handling, this should never happen

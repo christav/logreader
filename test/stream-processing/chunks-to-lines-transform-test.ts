@@ -49,4 +49,7 @@ describe('line transform transform', () => {
   it('should not return partial line at start of first chunk');
   it('should delimit lines by crlf');
   it('should not output oldest line in chunk if invalid utf8');
+  it('should not output first line in chunk until next chunk comes in');
+  it('should output first l9ine in chunk when stream is closing');
+  
 });
