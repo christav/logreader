@@ -59,10 +59,32 @@ describe('line transform transform', () => {
     ]);
   });
 
-  it('should not return partial line at start of first chunk');
-  it('should delimit lines by crlf');
-  it('should not output oldest line in chunk if invalid utf8');
-  it('should not output first line in chunk until next chunk comes in');
-  it('should output first line in chunk when stream is closing');
+  it('should not return partial line at end of first chunk', async () => {
+    const chunks = [
+      Buffer.from('First complete line\nand a partial'),
+      Buffer.from('Start of file\n')
+    ];
 
+    const lines = await runTransform(chunks);
+
+    expect(lines).to.eql(['First complete line', 'Start of file']);
+  });
+
+  it('should delimit lines by crlf', async () => {
+    const chunks = [
+      Buffer.from(' newest line\r\n'),
+      Buffer.from('second line\r\nThis is the'),
+      Buffer.from('This is the oldest line\r\nThis is the '),
+    ];
+
+    const lines = await runTransform(chunks);
+
+    expect(lines).to.have.lengthOf(3);
+    expect(lines).to.eql([
+      'This is the newest line',
+      'This is the second line',
+      'This is the oldest line'
+    ]);
+
+  });
 });
