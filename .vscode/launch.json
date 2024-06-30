@@ -16,6 +16,18 @@
                 "--config",
                 "${workspaceFolder}/.mocharc.json"
             ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Server",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/node_modules/tsx/dist/cli.mjs",
+            "args": [
+                "${workspaceFolder}/index.ts"
+            ]
         }
     ]
 }
