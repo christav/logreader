@@ -41,7 +41,7 @@ describe('line transform transform', () => {
     );
 
     expect(lines).to.have.lengthOf(2);
-    expect(lines[0]).to.eql('this is the new line');
+    expect(lines[0]).to.eql('This is the new line');
     expect(lines[1]).to.eql('This is the old line');
   });
 
