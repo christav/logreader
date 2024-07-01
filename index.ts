@@ -1,13 +1,14 @@
 import Fastify from 'fastify';
 import { getLogRoute } from './src/routes/get-log-route';
-const logLevel = process.env['LOG_LEVEL'] || 'info';
-const server = Fastify({ logger: { level: logLevel} });
+import { config } from './src/lib/util';
+
+const server = Fastify({ logger: { level: config.loglevel } });
 
 server.route(getLogRoute);
 
 async function run() {
   await server.listen(
-    { port: 3001 },
+    { port: config.port },
     function (err, address) {
       if (err) {
         console.log(`Startup failed, error ${err}`);
