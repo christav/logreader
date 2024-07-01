@@ -29,7 +29,8 @@
                 "${workspaceFolder}/index.ts"
             ],
             "env": {
-                "LOG_FILES_DIR": "C:\\ProgramData\\sample-logs"
+                "LOG_FILES_DIR": "C:\\ProgramData\\sample-logs",
+                "LOG_LEVEL": "debug"
             }
         }
     ]

@@ -11,6 +11,7 @@ import {
  }  from '../lib/util';
 
 import {
+  DEFAULT_BLOCK_SIZE,
   makeReverseBlockStream,
   makeToLinesTransform,
   makeIncludeFilter,
@@ -45,19 +46,23 @@ export const getLogRoute: RouteOptions = {
     // Create formatter based on Accept header
     const { contentType, formatter } = makeFormatter(req);
 
-    // Build output pipeline based on query params
-    const includeTerm = (req.query as any)['inc'] || '';
-    const filter = makeIncludeFilter(includeTerm);
-
-    const maxLines = Number.parseInt((req.query as any)['n'] || '-1', 10);
-    const maxLinesFilter = makeMaxLinesFilter(maxLines);
-
     // Process pipeline and output
 
     try {
+      const ac = new AbortController();
+      const signal = ac.signal;
+
       resp.type(contentType);
-      const source = await makeReverseBlockStream(logFilePath);
+      const source = await makeReverseBlockStream(logFilePath, DEFAULT_BLOCK_SIZE, { signal });
       const lines = makeToLinesTransform();
+
+      // Build output pipeline based on query params
+      const includeTerm = (req.query as any)['inc'] || '';
+      const filter = makeIncludeFilter(includeTerm);
+
+      const maxLines = Number.parseInt((req.query as any)['n'] || '-1', 10);
+      const maxLinesFilter = makeMaxLinesFilter(maxLines, ac);
+
       await pipeline(
         source,
         lines,

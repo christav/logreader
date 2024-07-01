@@ -1,6 +1,6 @@
 import { Transform } from 'stream';
 
-export function makeMaxLinesFilter(n: number) {
+export function makeMaxLinesFilter(n: number, abortController?: AbortController) {
   return Transform.from(
     async function *(source: AsyncIterable<string>, {signal}: {signal: AbortSignal}) {
       let linesLeft = n;
@@ -13,6 +13,9 @@ export function makeMaxLinesFilter(n: number) {
           --linesLeft;
         }
         if (linesLeft === 0) {
+          if (abortController) {
+            abortController.abort();
+          }
           return;
         }
       }

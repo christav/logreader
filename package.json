@@ -6,8 +6,10 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf build",
-    "run": "cross-env LOG_FILES_DIR=C:/ProgramData/sample-logs node build/index.js",
+    "run": "cross-env LOG_FILES_DIR=C:/ProgramData/sample-logs node --trace-warnings build/index.js",
+    "run:debug": "cross-env LOG_FILES_DIR=C:/ProgramData/sample-logs LOG_LEVEL=debug node --trace-warnings build/index.js",
     "start": "npm run build && npm run run",
+    "start:debug": "npm run build && npm run run:debug",
     "test": "mocha"
   },
   "author": "Chris Tavares <cct@tavaresstudios.com>",

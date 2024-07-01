@@ -1,5 +1,5 @@
-import { open, FileHandle, stat } from 'fs/promises';
-import { Readable  } from 'stream';
+import { FileHandle, open } from 'fs/promises';
+import { Readable } from 'stream';
 
 export const DEFAULT_BLOCK_SIZE = 4096;
 
@@ -29,9 +29,12 @@ function * blockIndexes(fileLength: number, blockSize: number): Generator<BlockI
   }
 }
 
-async function *readBlocksGenerator(fh: FileHandle, fileLength: number, blockSize: number): AsyncGenerator<Buffer> {
+async function *readBlocksGenerator(fh: FileHandle, fileLength: number, blockSize: number, signal?: AbortSignal): AsyncGenerator<Buffer> {
   try {
     for (let {start, length} of blockIndexes(fileLength, blockSize)) {
+      if (signal && signal.aborted) {
+        break;
+      }
       const buf = Buffer.allocUnsafe(length);
       const readResult = await fh.read({ buffer: buf, position: start, length });
       if (readResult.bytesRead === 0) {
@@ -45,7 +48,7 @@ async function *readBlocksGenerator(fh: FileHandle, fileLength: number, blockSiz
   }
 }
 
-export async function makeReverseBlockStream(logfile: string, blockSize: number = DEFAULT_BLOCK_SIZE): Promise<Readable> {
+export async function makeReverseBlockStream(logfile: string, blockSize: number = DEFAULT_BLOCK_SIZE, options?: { signal?: AbortSignal }): Promise<Readable> {
   // Stat the file so we can check if it exists and how long it is.
   // This does mean that if the file's being actively being written
   // to we'll miss the new items; this is expected and reasonable.
@@ -53,5 +56,5 @@ export async function makeReverseBlockStream(logfile: string, blockSize: number 
   const stats = await fileHandle.stat();
   const fileLength = stats.size;
 
-  return Readable.from(readBlocksGenerator(fileHandle, fileLength, blockSize));
+  return Readable.from(readBlocksGenerator(fileHandle, fileLength, blockSize, options?.signal));
 }
