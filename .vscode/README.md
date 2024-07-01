@@ -51,6 +51,15 @@ cmd.exe:
 > node build\index.js
 ```
 
+## Log File Format
+
+This service makes very little assumptions about the contents of the log files. All it requires is:
+* The newest log record is at the end of the file.
+* The file is written with one log entry per line, with lines separated by either lf (Unix/Mac format) or cr lf (Windows format) characters.
+* The file contents are in UTF-8 encoding.
+
+The output is undefined if the log does not meet these requirements.
+
 ## The API
 
 The server exposes a single route, `/logs`, over the http protocol.
