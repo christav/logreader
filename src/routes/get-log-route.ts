@@ -22,7 +22,9 @@ export const getLogRoute: RouteOptions = {
   url: '/logs',
   schema: {
     querystring: {
-      log: { type: 'string' }
+      log: { type: 'string' },
+      inc: { type: 'string' },
+      n: { type: 'integer', minimum: 1 }
     }
   },
 
