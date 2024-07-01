@@ -9,6 +9,7 @@ import {
   makeReverseBlockStream,
   makeToLinesTransform,
   makeIncludeFilter,
+  makeMaxLinesFilter
 } from '../lib/log-streams';
 
 export const getLogRoute: RouteOptions = {
@@ -40,22 +41,26 @@ export const getLogRoute: RouteOptions = {
 
     // Build output pipeline based on query params
     const includeTerm = (req.query as any)['inc'] || '';
+    const filter = makeIncludeFilter(includeTerm);
+
+    const maxLines = Number.parseInt((req.query as any)['n'] || '-1', 10);
+    const maxLinesFilter = makeMaxLinesFilter(maxLines);
 
     // Process pipeline and output
 
     resp.type(contentType);
     const source = await makeReverseBlockStream(logFilePath);
     const lines = makeToLinesTransform();
-    const filter = makeIncludeFilter(includeTerm);
     await pipeline(
       source,
       lines,
       filter,
+      maxLinesFilter,
       formatter,
       async function *(source) {
         const final = Readable.from(source);
         await resp.send(final);
       }
-    )
+    );
   }
 }
