@@ -36,7 +36,7 @@ export const getLogRoute: RouteOptions = {
     // If it's anything other than a base path, they're trying to break
     // out of our log directory, just bail. No details on file not found,
     // no reason to make hackers life easier.
-    if (!pathIsFilename(fn)) {
+    if (!fn || !pathIsFilename(fn)) {
       resp.statusCode = 400;
       return;
     }
