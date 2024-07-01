@@ -29,7 +29,6 @@ export const getLogRoute: RouteOptions = {
   },
 
   async handler (req, resp) {
-    req.log.debug({title: "query string", qs: req.query});
     // Validate file name isn't trying to escape the log dir
     const fn: string = (req.query as any)['log'];
 

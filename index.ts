@@ -1,7 +1,7 @@
 import Fastify from 'fastify';
 import { getLogRoute } from './src/routes/get-log-route';
-
-const server = Fastify({ logger: { level: 'debug'} });
+const logLevel = process.env['LOG_LEVEL'] || 'info';
+const server = Fastify({ logger: { level: logLevel} });
 
 server.route(getLogRoute);
 
