@@ -55,16 +55,26 @@ export const getLogRoute: RouteOptions = {
 
     // Process pipeline and output
 
-    resp.type(contentType);
-    const source = await makeReverseBlockStream(logFilePath);
-    const lines = makeToLinesTransform();
-    await pipeline(
-      source,
-      lines,
-      filter,
-      maxLinesFilter,
-      formatter,
-      streamToReply(resp)
-    );
+    try {
+      resp.type(contentType);
+      const source = await makeReverseBlockStream(logFilePath);
+      const lines = makeToLinesTransform();
+      await pipeline(
+        source,
+        lines,
+        filter,
+        maxLinesFilter,
+        formatter,
+        streamToReply(resp)
+      );
+    } catch (err: any) {
+      // Catch file not found error, return 400
+      if (err.code && err.code === 'ENOENT') {
+        resp.statusCode = 400;
+        return;
+      }
+      // Any other error, let fastify turn it into a 500
+      throw err;
+    }
   }
 }
