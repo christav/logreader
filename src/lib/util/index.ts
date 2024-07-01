@@ -1,3 +1,3 @@
 export { default as config } from './config';
-export { pathIsFilename } from './validation';
+export { pathIsFilename, streamToReply } from './fastify-utils';
 export { makeFormatter } from './make-formatter';

@@ -3,7 +3,12 @@ import { join as pathJoin } from 'path';
 import { Readable } from 'stream';
 import { pipeline } from 'stream/promises';
 
-import { config, pathIsFilename, makeFormatter }  from '../lib/util';
+import {
+  config,
+  pathIsFilename,
+  makeFormatter,
+  streamToReply
+ }  from '../lib/util';
 
 import {
   makeReverseBlockStream,
@@ -57,10 +62,7 @@ export const getLogRoute: RouteOptions = {
       filter,
       maxLinesFilter,
       formatter,
-      async function *(source) {
-        const final = Readable.from(source);
-        await resp.send(final);
-      }
+      streamToReply(resp)
     );
   }
 }
