@@ -8,7 +8,7 @@ import { config, pathIsFilename, makeFormatter }  from '../lib/util';
 import {
   makeReverseBlockStream,
   makeToLinesTransform,
-  makeTextPlainFormatter
+  makeIncludeFilter,
 } from '../lib/log-streams';
 
 export const getLogRoute: RouteOptions = {
@@ -39,14 +39,18 @@ export const getLogRoute: RouteOptions = {
     const { contentType, formatter } = makeFormatter(req);
 
     // Build output pipeline based on query params
+    const includeTerm = (req.query as any)['inc'] || '';
+
     // Process pipeline and output
 
     resp.type(contentType);
     const source = await makeReverseBlockStream(logFilePath);
     const lines = makeToLinesTransform();
+    const filter = makeIncludeFilter(includeTerm);
     await pipeline(
       source,
       lines,
+      filter,
       formatter,
       async function *(source) {
         const final = Readable.from(source);
