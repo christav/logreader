@@ -1,16 +1,9 @@
-import { createReadStream } from 'fs';
-import { pipeline } from 'stream/promises';
 import Fastify from 'fastify';
+import { getLogRoute } from './src/routes/get-log-route';
 
-const server = Fastify({ logger: true });
+const server = Fastify({ logger: { level: 'debug'} });
 
-server.get('/logs', async function (req, reply) {
-  reply.type('application/json');
-  const sourceFile = `${__dirname}/../package.json`;
-  console.log(`Sending file ${sourceFile}`);
-  const source = createReadStream(sourceFile);
-  return reply.send(source);
-});
+server.route(getLogRoute);
 
 async function run() {
   await server.listen(
@@ -27,6 +20,6 @@ async function run() {
 
 run()
   .then(
-    () => console.log('Server exitting'),
-    (err) => console.log(`Server exitted with error ${err}`)
+    () => console.log('Server started'),
+    (err) => console.log(`Server startup failed with error ${err}`)
   );

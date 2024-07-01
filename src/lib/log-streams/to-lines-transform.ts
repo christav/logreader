@@ -45,7 +45,9 @@ class ToLinesTransform extends Transform {
     //     if the logfile is being written to while we're reading out,
     //     the last element will not be a complete line, and we've chosen
     //     to skip that since it could be garbage.
-    for (let line of logLines.slice(0, -1)) {
+    const linesToOutput = logLines.slice(0, -1);
+    linesToOutput.reverse();
+    for (let line of linesToOutput) {
       this.push(line, 'utf8');
     }
 

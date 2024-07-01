@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf build",
-    "start": "npm run build && node build/index.js",
+    "run": "cross-env LOG_FILES_DIR=C:/ProgramData/sample-logs node build/index.js",
+    "start": "npm run build && npm run run",
     "test": "mocha"
   },
   "author": "Chris Tavares <cct@tavaresstudios.com>",
@@ -19,6 +20,7 @@
     "@types/mocha": "^10.0.7",
     "@types/node": "^20.14.9",
     "chai": "^5.1.1",
+    "cross-env": "^7.0.3",
     "mocha": "^10.5.2",
     "rimraf": "^5.0.7",
     "tsx": "^4.15.7",

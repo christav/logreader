@@ -44,16 +44,16 @@ describe('line transform transform', () => {
 
   it('should return all lines split across chunks', async () => {
     const chunks = [
-      Buffer.from(' newest line\n'),
+      Buffer.from(' almost newest line\nAnd the really newest line\n'),
       Buffer.from('second line\nThis is the'),
       Buffer.from('This is the oldest line\nThis is the '),
     ];
 
     const lines = await runTransform(chunks);
 
-    expect(lines).to.have.lengthOf(3);
     expect(lines).to.eql([
-      'This is the newest line',
+      'And the really newest line',
+      'This is the almost newest line',
       'This is the second line',
       'This is the oldest line'
     ]);
